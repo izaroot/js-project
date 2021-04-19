@@ -1,0 +1,30 @@
+header{
+    text-align: center;
+}
+#main-display{
+    width: 100%;
+    height: 250px;
+}
+
+.card{
+    width: 250px;
+    height: 350px;
+    border-color: blue;
+    border-width: 5px;
+    border-style: solid;
+    background-color: #444;
+    position: relative;
+    color: #fff;
+}
+.card img{
+    width: 100%;
+}
+#platforms{
+    position: absolute;
+    right: 10px;
+    bottom: 5px;
+}
+#platforms img{
+    width: 32px;
+    height: 32px
+}
