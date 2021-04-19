@@ -1,9 +1,11 @@
 header{
     text-align: center;
+
 }
 #main-display{
     width: 100%;
     height: 250px;
+    position: sticky;
 }
 
 .card{
@@ -15,7 +17,19 @@ header{
     background-color: #444;
     position: relative;
     color: #fff;
+    margin: 20px 5px 10px 5px;
+    float: left;
+    cursor: pointer;
+
 }
+
+#card-collection {
+    margin: auto;
+    width: 90%;
+
+
+}
+
 .card img{
     width: 100%;
 }
