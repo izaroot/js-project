@@ -3,13 +3,28 @@ let cardCollectionDiv = document.querySelector('#card-collection')
 let displayGame = {}
 
 let displayTitleH1 = document.querySelector('#main-display h1')
-let displayImage = document.querySelector('#main-display img')
+let displayImage = document.querySelector('#main-display div img')
 let displayGenreP = document.querySelector('#genre')
 let displayYearP = document.querySelector('#year')
 let displayLikesP = document.querySelector('#likes')
 let displayPlatformDiv = document.querySelector('#platform')
+let displayInfoDiv = document.querySelector('#info')
+
+let pcDiv = document.querySelector('div.pc')
+let xboxDiv = document.querySelector('.xbox')
+let psDiv = document.querySelector('.ps')
+let switchDiv = document.querySelector('.switch')
 
 let likeButton = document.querySelector('#main-display button')
+
+const platformBool = true;
+
+fetch("http://localhost:3000/games/1")
+.then(resp => resp.json())
+.then(gameObj => {
+    displayGameFunc(gameObj)
+
+})
 
 fetch('http://localhost:3000/games')
 .then(resp => resp.json())
@@ -27,99 +42,64 @@ fetch('http://localhost:3000/games')
         let genreP = document.createElement('p')
         genreP.innerText = `Genre: ${gameObj.genre}`
 
-        cardDiv.append(gameImage, titleH3, genreP)
+        
+        let newLikeButton = document.createElement('button')
+        newLikeButton.innerText = "Like!"
+        
+        cardDiv.append(gameImage, titleH3, genreP, newLikeButton)
         cardCollectionDiv.append(cardDiv)
-
-        switch(true){
-
-            case gameObj.platform.PC: console.log(gameObj.platform.PC)
-            case gameObj.platform.xbox: console.log(gameObj.platform.xbox)
-            case gameObj.platform.PS: console.log(gameObj.platform.PS)
-            case gameObj.platform.switch: console.log(gameObj.platform.switch)
-            break;
-            default: console.log("nothinggggg")
-        }
-
-
-        cardDiv.addEventListener('click', (e) => {
-            displayGame = gameObj
-
-            console.log(gameObj)
-
-            displayTitleH1.innerText = gameObj.title
-            displayImage.src = gameObj.image
-            displayGenreP.innerText = gameObj.genre
-            displayYearP.innerText = gameObj.year
-            displayLikesP.innerText = gameObj.likes
-
-
-            
-
-        })
-
-        likeButton.addEventListener('click', (e) => {
-
-            fetch(`http://localhost:3000/games/${gameObj.id}`, {
+        newLikeButton.addEventListener('click', (e) => {
+            fetch(`http://localhost:3000/games/${displayGame.id}`, {
                 method: "PATCH",
                 headers: {
                     "Content-Type": "application/json",
                     "Accept": "application/json"
                 },
                 body: JSON.stringify({
-                   likes: gameObj.likes + 1 
+                likes: gameObj.likes + 1 
                 })
             })
             .then(resp => resp.json())
             .then(updatedGameObj => {
-                gameObj = updatedGameObj
+                gameObj.likes = updatedGameObj.likes
                 displayLikesP.innerText = updatedGameObj.likes
-            
+        
             })
-            
-            //likeButton.disabled=true 
-            
-            })
+        
+            newLikeButton.disabled=true 
+        
+        })
+        
+        
+        cardDiv.addEventListener('click', (e) => {
+            displayGameFunc(gameObj)
 
+        })
 
+        
     } )
 })
 
-
-fetch("http://localhost:3000/games/1")
-.then(resp => resp.json())
-.then(gameObj => {
+function displayGameFunc(gameObj){
     displayGame = gameObj
+            
+    displayTitleH1.innerText = gameObj.title
+    displayImage.src = gameObj.image
+    displayGenreP.innerText = gameObj.genre
+    displayYearP.innerText = gameObj.year
+    displayLikesP.innerText = gameObj.likes
+    
+    
+            
+    gameObj.platform.PC ? pcDiv.style.display = "block" : pcDiv.style.display = "none"
+    gameObj.platform.Xbox ? xboxDiv.style.display = "block" : xboxDiv.style.display = "none"
+    gameObj.platform.PS ? psDiv.style.display = "block" : psDiv.style.display = "none"
+    gameObj.platform.Switch ? switchDiv.style.display = "block" : switchDiv.style.display = "none"
 
-            displayTitleH1.innerText = gameObj.title
-            displayImage.src = gameObj.image
-            displayGenreP.innerText = gameObj.genre
-            displayYearP.innerText = gameObj.year
-            displayLikesP.innerText = gameObj.likes
-})
+}
 
 
-// likeButton.addEventListener('click', (e) => {
 
-// fetch(`http://localhost:3000/games/${displayGame.id}`, {
-//     method: "PATCH",
-//     headers: {
-//         "Content-Type": "application/json",
-//         "Accept": "application/json"
-//     },
-//     body: JSON.stringify({
-//        likes: displayGame.likes + 1 
-//     })
-// })
-// .then(resp => resp.json())
-// .then(updatedGameObj => {
-//     displayGame = updatedGameObj
-//     displayLikesP.innerText = updatedGameObj.likes
-
-// })
-
-// likeButton.disabled=true 
-
-// })
 
 
 

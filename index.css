@@ -1,3 +1,7 @@
+body{
+    width: 100%;
+    margin: 0px;
+}
 header{
     text-align: center;
 
@@ -5,7 +9,27 @@ header{
 #main-display{
     width: 100%;
     height: 250px;
-    position: sticky;
+    position: fixed;
+    top: 0px;
+    margin: 0px;
+    height: 450px;
+    z-index: 500;
+    background-color: lightgray;
+    padding: 10px;
+    /*  overflow: auto; */
+} 
+
+#main-display div{
+    float: right;
+}
+
+#main-display #info{
+    float: left;
+}
+#main-display div img{
+    text-align: right;
+    width: 450px;
+    /* max-height: 400px; */
 }
 
 .card{
@@ -22,23 +46,60 @@ header{
     cursor: pointer;
 
 }
+.card button{
+    position: absolute;
+    bottom: 10px;
+    right: 10px;
+}
 
 #card-collection {
     margin: auto;
     width: 90%;
-
-
+    top: 400px;
+    position: relative;
 }
 
 .card img{
     width: 100%;
 }
-#platforms{
-    position: absolute;
-    right: 10px;
-    bottom: 5px;
+div#platform{
+    float: left;
+    clear: both;
 }
-#platforms img{
+
+.pc{
+    background-image: url("https://cdn.icon-icons.com/icons2/1293/PNG/512/2363391-computer-device-mobile-phone-smartphone-windows-windows-phone_85500.png") ;
+    height: 32px;
     width: 32px;
-    height: 32px
+    display: none;
+    background-position: center;
+    background-repeat: no-repeat;
+    background-size: cover;
+}
+.xbox{
+    background-image: url("https://cdn.icon-icons.com/icons2/1293/PNG/512/2363210-console-game-gaming-play-xbox_85516.png") ;
+    height: 32px;
+    width: 32px;
+    display: none;
+    background-position: center;
+    background-repeat: no-repeat;
+    background-size: cover;
+}
+.ps{
+    background-image: url("https://cdn.icon-icons.com/icons2/1293/PNG/512/2363399-console-game-gaming-play-playstation_85478.png") ;
+    height: 32px;
+    width: 32px;
+    display: none;
+    background-position: center;
+    background-repeat: no-repeat;
+    background-size: cover;
+}
+.switch{
+    background-image: url('https://cdn.icon-icons.com/icons2/2429/PNG/512/nintendo_logo_icon_147258.png') ;
+    height: 32px;
+    width: 32px;
+    display: none;
+    background-position: center;
+    background-repeat: no-repeat;
+    background-size: cover;
 }
