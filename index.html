@@ -20,6 +20,8 @@
         <p id="genre">genre goes here</p>
         <p id="year">year here</p>
         <p id="likes">likes goes here</p>
+        <h4>Reviews:</h4>
+        <ul id="reviews"></ul>
         <div id="platforms">
             <div class="pc"></div>
             <div class="xbox"></div>
@@ -27,11 +29,29 @@
             <div class="switch"></div>
         </div>
         </div>
-
-        <div><img></div>
+        
+        <div id="image-container"><img></div>
 
     </div>
+    <div id="form-container">
+        <form>
+            <input type="text" name="title" placeholder="Title goes here">
+            <input type="text" name="image" placeholder="Image URL">
+            <input type="text" name="year" placeholder="Year of release">
+            <input type="text" name="genre" placeholder="What kind of game is it?"><br>
+            <p>Which platforms is this game available on?</p><br>
+            <input type="checkbox" name="pc" id="pc">
+            <label for="pc">PC</label>
+            <input type="checkbox" name="xbox" id="xbox">
+            <label for="xbox">XBOX</label>
+            <input type="checkbox" name="ps" id="ps">
+            <label for="ps">PS</label>
+            <input type="checkbox" name="switch" id="switch">
+            <label for="switch">Switch</label>
+            <input type="submit">
 
+        </form>
+    </div>
     <div id="card-collection">
 
         

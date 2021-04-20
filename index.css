@@ -1,21 +1,25 @@
 body{
     width: 100%;
     margin: 0px;
+    background-image: url('https://www.teahub.io/photos/full/361-3611543_videogame-pixel-background-animation-free-footage-hd-video.jpg');
 }
+
 header{
     text-align: center;
 
 }
 #main-display{
     width: 100%;
-    height: 250px;
+    min-height: 300px;
     position: fixed;
     top: 0px;
     margin: 0px;
-    height: 450px;
+    max-height: 450px;
     z-index: 500;
     background-color: lightgray;
     padding: 10px;
+    font-family: Verdana, Geneva, Tahoma, sans-serif;
+    opacity: .9;
     /*  overflow: auto; */
 } 
 
@@ -25,11 +29,27 @@ header{
 
 #main-display #info{
     float: left;
+    text-overflow: ellipsis;
+    width: 60%;
 }
+
+#image-container{
+    width: 40%;
+    text-align: right;
+    
+}
+
 #main-display div img{
     text-align: right;
-    width: 450px;
+    max-width: 450px;
+    max-height: 250px;
+    padding-right: 30px;
+
     /* max-height: 400px; */
+}
+
+.card h3, .card p {
+    margin-left: 10px;
 }
 
 .card{
@@ -44,6 +64,8 @@ header{
     margin: 20px 5px 10px 5px;
     float: left;
     cursor: pointer;
+    border-radius: 10px;
+    font-family: Arial, Helvetica, sans-serif;
 
 }
 .card button{
@@ -102,4 +124,15 @@ div#platform{
     background-position: center;
     background-repeat: no-repeat;
     background-size: cover;
+}
+
+#form-container {
+    height: 200px;
+    width: 250px;
+    position: relative;
+    top: 400px;
+    background-color: lightgrey;
+    font-size: 13px;
+    font-family: 'Trebuchet MS', 'Lucida Sans Unicode', 'Lucida Grande', 'Lucida Sans', Arial, sans-serif;
+    
 }
