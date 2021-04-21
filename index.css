@@ -136,3 +136,23 @@ div#platform{
     font-family: 'Trebuchet MS', 'Lucida Sans Unicode', 'Lucida Grande', 'Lucida Sans', Arial, sans-serif;
     
 }
+#loginForm-con{
+    height: 200px;
+    width: 300px;
+    position: relative;
+    left: 300px;
+    top: 200px;
+    background-color: white;
+}
+.fav-heart{
+    position: absolute;
+    bottom: 10px;
+    right: 65px;
+    font-size: 26px;
+}
+.fav-heart-on{
+    background-image:url('https://cdn0.iconfinder.com/data/icons/small-n-flat/24/678087-heart-512.png') ;
+}
+.fav-heart-off{
+    background-image:url('https://cdn4.iconfinder.com/data/icons/ionicons/512/icon-ios7-heart-outline-512.png') ;
+}

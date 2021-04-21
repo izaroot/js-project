@@ -19,6 +19,12 @@ let switchDiv = document.querySelector('.switch')
 let likeButton = document.querySelector('#main-display button')
 
 let userGameForm = document.querySelector('#form-container form')
+let loginFormCon = document.querySelector('#loginForm-con')
+
+let favoriteOn =  "💖"
+let favoriteOff = "🤍"
+
+let userObj = {}
 
 const platformBool = true;
 
@@ -33,23 +39,34 @@ fetch('http://localhost:3000/games')
 .then(resp => resp.json())
 .then((gamesArr) => {
     gamesArr.forEach(gameObj => {
-        let cardDiv = document.createElement('div')
+        cardRenderer(gameObj)       
+    } )
+})
+
+// Renders Card
+function cardRenderer(gameObject){
+    let cardDiv = document.createElement('div')
         cardDiv.className= "card"
 
         let gameImage = document.createElement('img')
-        gameImage.src = gameObj.image
+        gameImage.src = gameObject.image
 
         let titleH3 = document.createElement('h3')
-        titleH3.innerText = gameObj.title
+        titleH3.innerText = gameObject.title
 
         let genreP = document.createElement('p')
-        genreP.innerText = `Genre: ${gameObj.genre}`
+        genreP.innerText = `Genre: ${gameObject.genre}`
 
         
         let newLikeButton = document.createElement('button')
         newLikeButton.innerText = "Like!"
+
+        let favoriteSpan = document.createElement('span')
+        favoriteSpan.className = "fav-heart"
+        favoriteSpan.innerText = favoriteOff
+        favoriteSpan.dataset.gameId = gameObject.id
         
-        cardDiv.append(gameImage, titleH3, genreP, newLikeButton)
+        cardDiv.append(gameImage, titleH3, genreP, favoriteSpan, newLikeButton)
         cardCollectionDiv.append(cardDiv)
         newLikeButton.addEventListener('click', (e) => {
             fetch(`http://localhost:3000/games/${displayGame.id}`, {
@@ -59,12 +76,12 @@ fetch('http://localhost:3000/games')
                     "Accept": "application/json"
                 },
                 body: JSON.stringify({
-                likes: gameObj.likes + 1 
+                likes: gameObject.likes + 1 
                 })
             })
             .then(resp => resp.json())
             .then(updatedGameObj => {
-                gameObj.likes = updatedGameObj.likes
+                gameObject.likes = updatedGameObj.likes
                 displayLikesP.innerText = updatedGameObj.likes
         
             })
@@ -73,15 +90,29 @@ fetch('http://localhost:3000/games')
         
         })
         
-        
+
         cardDiv.addEventListener('click', (e) => {
-            displayGameFunc(gameObj)
+            displayGameFunc(gameObject)
 
         })
+        favoriteSpan.addEventListener('click', (e) =>{
+            let {favoritedGames} = userObj.favoriteslist[0]
+            console.log(favoritedGames)
+            fetch(`http://localhost:3000/favoriteslist?userId=${userObj.id}`, {
+                method: "PATCH",
+                headers: {
+                    "Content-Type": "application/json"
+                },
+                body:JSON.stringify({                
+                    favoritedGames: favoritedGames
+                })
+            })
+            .then(resp => resp.json())
+            .then(()=>{
 
-        
-    } )
-})
+            })
+        })
+}
 
 let newGamePc = false
 let newGameXbox = false
@@ -135,60 +166,10 @@ userGameForm.addEventListener('submit', (e) => {
     .then(newGameObj => {
         e.target.reset()
 
-        let cardDiv = document.createElement('div')
-        cardDiv.className= "card"
-
-        let gameImage = document.createElement('img')
-        gameImage.src = newGameObj.image
-
-        let titleH3 = document.createElement('h3')
-        titleH3.innerText = newGameObj.title
-
-        let genreP = document.createElement('p')
-        genreP.innerText = `Genre: ${newGameObj.genre}`
-
-        
-        let newLikeButton = document.createElement('button')
-        newLikeButton.innerText = "Like!"
-        
-        cardDiv.append(gameImage, titleH3, genreP, newLikeButton)
-        cardCollectionDiv.append(cardDiv)
-        newLikeButton.addEventListener('click', (e) => {
-            fetch(`http://localhost:3000/games/${displayGame.id}`, {
-                method: "PATCH",
-                headers: {
-                    "Content-Type": "application/json",
-                    "Accept": "application/json"
-                },
-                body: JSON.stringify({
-                likes: gameObj.likes + 1 
-                })
-            })
-            .then(resp => resp.json())
-            .then(updatedGameObj => {
-                newGameObj.likes = updatedGameObj.likes
-                displayLikesP.innerText = updatedGameObj.likes
-        
-            })
-        
-            newLikeButton.disabled=true 
-        
-        })
-        
-        
-        cardDiv.addEventListener('click', (e) => {
-            displayGameFunc(newGameObj)
-
-        })
-
-        
+        cardRenderer(newGameObj)      
     } ) 
     
 })
-
-
-
-
 
 
 // helper function
@@ -232,14 +213,77 @@ function displayGameFunc(gameObj){
 
 
 
+// STRETCH GOALS
+function displayLoginForm(){
+    loginFormCon.innerHTML = ""
 
+    let loginForm = document.createElement("form")
 
+    let usernameDiv = document.createElement('div')
 
-{/* <div class="card">
-    <img src="https://image.api.playstation.com/cdn/UP0006/CUSA10866_00/3uebKTl6KgC0chEhBOs3GVaOLapwPgQ5.png">
-    <p>Burnout Paradise Remastered</p>
-    <p>Genre: Racing</p>
-    <div id="platforms">
-        <img src="https://cdn.icon-icons.com/icons2/688/PNG/512/windows-software-operating-system_icon-icons.com_61426.png">
-    </div>
-</div> */}
+    let usernameLabel = document.createElement("label")
+    usernameLabel.htmlFor = "username"
+    usernameLabel.innerText = "Username"
+
+    let usernameInput = document.createElement("input")
+    usernameInput.type = "text"
+    usernameInput.className = "form-control"
+    usernameInput.id = "username"
+    usernameInput.placeholder = "Enter Username"
+    usernameInput.autocomplete = "off"
+
+    usernameDiv.append(usernameLabel, usernameInput)
+
+    let submitButton = document.createElement('button')
+    submitButton.type = "submit"
+    submitButton.innerText = "Login"
+
+    loginForm.append(usernameDiv, submitButton)
+    loginFormCon.append(loginForm)
+    loginForm.addEventListener("submit", userLogin)
+
+    let registerForm = document.createElement("form")
+
+    let usernameDiv2 = document.createElement('div')
+
+    let usernameLabel2 = document.createElement("label")
+    let usernameInput2 = document.createElement("input")
+    usernameInput2.type = "text"
+
+    usernameInput2.id = "username2"
+    usernameInput2.placeholder = "Enter Username"
+    usernameInput2.autocomplete = "off"
+
+    usernameDiv2.append(usernameLabel2, usernameInput2)
+
+    let submitButton2 = document.createElement('button')
+    submitButton2.type = "submit"
+    submitButton2.innerText = "Register"
+
+    registerForm.append(usernameDiv2, submitButton2)
+
+    loginFormCon.append(registerForm)
+    // registerForm.addEventListener("submit", handleRegisterForm)
+}
+
+function userLogin(evt){
+    evt.preventDefault()
+    let username = evt.target.username.value
+
+    fetch(`http://localhost:3000/users?_embed=favoriteslist&username=${username}`)
+    .then(resp => resp.json())
+    .then(potentialUserArr => {
+        if(potentialUserArr.length > 0){
+            let foundUser = potentialUserArr[0]
+            userObj = foundUser
+            let {favoritedGames} = foundUser.favoriteslist[0]
+            favoritedGames.forEach(gameId => {
+                document.querySelector(`[data-game-id='${gameId}']`).innerText = favoriteOn
+            })
+        }else{
+            console.log("no user found")
+        }
+    })
+}
+
+displayLoginForm()
