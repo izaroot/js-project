@@ -25,6 +25,8 @@ let favoriteOn =  "💖"
 let favoriteOff = "🤍"
 
 let userObj = {}
+let displayGameArr = []
+
 
 const platformBool = true;
 
@@ -35,9 +37,20 @@ fetch("http://localhost:3000/games/1")
 
 })
 
+// fetching fav games list
+let favGamesListArr = []
+fetch('http://localhost:3000/favoriteslist')
+.then(resp => resp.json())
+.then(listArr => {
+
+    favGamesListArr = listArr
+
+})
+
 fetch('http://localhost:3000/games')
 .then(resp => resp.json())
 .then((gamesArr) => {
+    displayGameArr = gamesArr
     gamesArr.forEach(gameObj => {
         cardRenderer(gameObj)       
     } )
@@ -96,22 +109,41 @@ function cardRenderer(gameObject){
 
         })
         favoriteSpan.addEventListener('click', (e) =>{
-            let {favoritedGames} = userObj.favoriteslist[0]
-            console.log(favoritedGames)
-            fetch(`http://localhost:3000/favoriteslist?userId=${userObj.id}`, {
-                method: "PATCH",
-                headers: {
-                    "Content-Type": "application/json"
-                },
-                body:JSON.stringify({                
-                    favoritedGames: favoritedGames
-                })
-            })
-            .then(resp => resp.json())
-            .then(()=>{
+            //if (userObj.length > 0){
 
+            
+            
+            let {favoritedGames} = userObj.favoriteslist[0]
+            //console.log(favoritedGames)
+            //debugger
+
+            favoritedGames.push(gameObject.id)
+
+            let result = favGamesListArr.filter(listObj => {
+                listObj.userId === userObj.id
             })
+
+                console.log(result)
+
+            // fetch(`http://localhost:3000/favoriteslist`, {
+            //     method: "PATCH",
+            //     headers: {
+            //         "Content-Type": "application/json"
+            //     },
+            //     body:JSON.stringify({                
+            //         favoritedGames: favoritedGames
+            //     })
+            // })
+            // .then(resp => resp.json())
+            // .then(()=>{
+
+            // })
+        // }
+        // else {
+        //     alert("Please login or register to favorite games.")
+        // }
         })
+        
 }
 
 let newGamePc = false
@@ -263,7 +295,7 @@ function displayLoginForm(){
     registerForm.append(usernameDiv2, submitButton2)
 
     loginFormCon.append(registerForm)
-    // registerForm.addEventListener("submit", handleRegisterForm)
+    registerForm.addEventListener("submit", userRegister)
 }
 
 function userLogin(evt){
@@ -273,16 +305,79 @@ function userLogin(evt){
     fetch(`http://localhost:3000/users?_embed=favoriteslist&username=${username}`)
     .then(resp => resp.json())
     .then(potentialUserArr => {
+        
         if(potentialUserArr.length > 0){
             let foundUser = potentialUserArr[0]
             userObj = foundUser
+            alert("User logged in.")
+            loginFormCon.innerHTML = ""
+            
+            let userUsernameP = document.createElement("p")
+            userUsernameP.innerText = `Logged in as ${foundUser.username}`
+
+            let logOutButton = document.createElement("button")
+            logOutButton.innerText = "Logout"
+
+            loginFormCon.append(userUsernameP, logOutButton)
+
+            logOutButton.addEventListener('click', (e) => {
+                
+                cardCollectionDiv.innerHTML = ""
+                displayLoginForm()
+                displayGameArr.forEach(gameObj => {
+                cardRenderer(gameObj)
+                })
+
+            })
+
             let {favoritedGames} = foundUser.favoriteslist[0]
             favoritedGames.forEach(gameId => {
                 document.querySelector(`[data-game-id='${gameId}']`).innerText = favoriteOn
             })
         }else{
             console.log("no user found")
+            alert("No User Found")
         }
+        evt.target.reset()
+    })
+}
+
+function userRegister(evt){
+    evt.preventDefault()
+    let username2 = evt.target.username2.value
+    //console.log(username2)
+
+
+    fetch('http://localhost:3000/users', {
+        method: "POST",
+        headers: {
+            "Content-Type": "application/json"
+        },
+        body: JSON.stringify({
+            username: username2,
+
+        })
+    })
+    .then(resp => resp.json())
+    .then(newUser => {
+        userObj = newUser
+        alert("New user registered.")
+
+        fetch('http://localhost:3000/favoriteslist', {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json"
+            },
+            body: JSON.stringify({
+                userId: newUser.id,
+                favoritedGames: []
+
+            })
+        })
+        .then(resp => resp.json())
+        .then(newFavoriteList => {
+            evt.target.reset()
+        })
     })
 }
 
