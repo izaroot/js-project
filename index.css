@@ -128,21 +128,56 @@ div#platform{
 
 #form-container {
     height: 200px;
-    width: 250px;
-    position: relative;
-    top: 400px;
+    width: 350px;
+    position: fixed;
+    top: 420px;
+    left:-320px;
     background-color: lightgrey;
     font-size: 13px;
     font-family: 'Trebuchet MS', 'Lucida Sans Unicode', 'Lucida Grande', 'Lucida Sans', Arial, sans-serif;
-    
+    z-index: 300;
+    padding: 10px 10px 10px 30px;
+}
+form-container input{
+    margin-bottom: 5px;
+}
+#form-container:hover{
+    transform: translate(320px, 0px);
+}
+#form-container div{
+    position: absolute;
+    right: 5px;
+    top: 5px;
+    font-size: 17px;
+    line-height: 26px;
+    border: 2px solid;
+    padding: 65px 5px;
 }
 #loginForm-con{
-    height: 200px;
-    width: 300px;
-    position: relative;
-    left: 300px;
-    top: 200px;
+    overflow: hidden;
+    padding: 10px 10px;
+    height: 30px;
+    width: 100px;
+    position: fixed;
+    right: 0px;
+    top: 420px;
     background-color: white;
+    z-index: 300;
+    font-size: 15px;
+    font-family: 'Trebuchet MS', 'Lucida Sans Unicode', 'Lucida Grande', 'Lucida Sans', Arial, sans-serif;
+}
+
+#loginForm-con button{
+    text-align: left;
+}
+#loginForm-con:hover{
+    height: 300px;
+    width: 140px;
+}
+.login-text{
+    margin-bottom: 40px;
+    text-align: center;
+    border: 2px solid green;
 }
 .fav-heart{
     position: absolute;
@@ -155,4 +190,31 @@ div#platform{
 }
 .fav-heart-off{
     background-image:url('https://cdn4.iconfinder.com/data/icons/ionicons/512/icon-ios7-heart-outline-512.png') ;
+}
+
+input[type="text"]{
+    padding: 1px 2px;
+    margin-bottom: 6px;
+}
+input{
+    text-rendering: auto;
+    color: -internal-light-dark(black, white);
+    letter-spacing: normal;
+    word-spacing: normal;
+    text-transform: none;
+    text-indent: 0px;
+    text-shadow: none;
+    display: inline-block;
+    text-align: start;
+    appearance: auto;
+    /* background-color: -internal-light-dark(rgb(255, 255, 255), rgb(59, 59, 59)); */
+    -webkit-rtl-ordering: logical;
+    cursor: pointer;
+    margin: 0em;
+    font: 400 13.3333px Arial;
+    padding: 1px 2px;
+    border-width: 2px;
+    border-style: inset;
+    /* border-color: -internal-light-dark(rgb(118, 118, 118), rgb(133, 133, 133)); */
+    border-image: initial;
 }

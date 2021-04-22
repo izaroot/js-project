@@ -39,14 +39,13 @@ fetch("http://localhost:3000/games/1")
 
 // fetching fav games list
 let favGamesListArr = []
-fetch('http://localhost:3000/favoriteslist')
-.then(resp => resp.json())
-.then(listArr => {
-
-    favGamesListArr = listArr
-
+function favArrFetch(){
+    fetch('http://localhost:3000/favoriteslist')
+    .then(resp => resp.json())
+    .then(listArr => {
+        favGamesListArr = listArr
 })
-
+}
 fetch('http://localhost:3000/games')
 .then(resp => resp.json())
 .then((gamesArr) => {
@@ -95,7 +94,7 @@ function cardRenderer(gameObject){
             .then(resp => resp.json())
             .then(updatedGameObj => {
                 gameObject.likes = updatedGameObj.likes
-                displayLikesP.innerText = updatedGameObj.likes
+                displayLikesP.innerText = `Likes: ${updatedGameObj.likes}`
         
             })
         
@@ -109,39 +108,54 @@ function cardRenderer(gameObject){
 
         })
         favoriteSpan.addEventListener('click', (e) =>{
-            //if (userObj.length > 0){
+            if (userObj.id > 0){
+                
+                let [result] = favGamesListArr.filter(listObj => 
+                    listObj.userId === userObj.id
+                    )
+                    let {favoritedGames} = userObj.favoriteslist[0]
+                    
+                    if(favoriteSpan.innerText === favoriteOff){                  
+                        favoritedGames.push(gameObject.id)
+                        fetch(`http://localhost:3000/favoriteslist/${result.id}`, {
+                            method: "PATCH",
+                            headers: {
+                                "Content-Type": "application/json"
+                            },
+                            body:JSON.stringify({                
+                                favoritedGames: favoritedGames
+                            })
+                        })
+                        .then(resp => resp.json())
+                        .then((updatedListObj)=>{
+                            favoriteSpan.innerText = favoriteOn
+                            listObj = updatedListObj
+                        })
+                    }else if(favoriteSpan.innerText === favoriteOn){
+                        let gameIndex = favoritedGames.indexOf(gameObject.id)
+                        console.log(gameObject.id)
+                        console.log(gameIndex)
+                        favoritedGames.splice(gameIndex, 1)
+                        fetch(`http://localhost:3000/favoriteslist/${result.id}`, {
+                            method: "PATCH",
+                            headers: {
+                                "Content-Type": "application/json"
+                            },
+                            body:JSON.stringify({                
+                                favoritedGames: favoritedGames
+                            })
+                        })
+                        .then(resp => resp.json())
+                        .then((updatedListObj)=>{
+                            favoriteSpan.innerText = favoriteOff
+                            listObj = updatedListObj
+                        })
+                }
+                
 
-            
-            
-            let {favoritedGames} = userObj.favoriteslist[0]
-            //console.log(favoritedGames)
-            //debugger
-
-            favoritedGames.push(gameObject.id)
-
-            let result = favGamesListArr.filter(listObj => {
-                listObj.userId === userObj.id
-            })
-
-                console.log(result)
-
-            // fetch(`http://localhost:3000/favoriteslist`, {
-            //     method: "PATCH",
-            //     headers: {
-            //         "Content-Type": "application/json"
-            //     },
-            //     body:JSON.stringify({                
-            //         favoritedGames: favoritedGames
-            //     })
-            // })
-            // .then(resp => resp.json())
-            // .then(()=>{
-
-            // })
-        // }
-        // else {
-        //     alert("Please login or register to favorite games.")
-        // }
+            }else {
+                alert("Please login or register to favorite games.")
+            }
         })
         
 }
@@ -183,6 +197,7 @@ userGameForm.addEventListener('submit', (e) => {
             title: newGameTitle,
             image: newGameImage,
             year: newGameYear,
+            likes:0,
             genre: newGameGenre,
             platform: {
                 PC: newGamePc,
@@ -249,6 +264,9 @@ function displayGameFunc(gameObj){
 function displayLoginForm(){
     loginFormCon.innerHTML = ""
 
+    let textDiv = document.createElement('div')
+    textDiv.innerText = "Login"
+    textDiv.className = "login-text"
     let loginForm = document.createElement("form")
 
     let usernameDiv = document.createElement('div')
@@ -271,7 +289,7 @@ function displayLoginForm(){
     submitButton.innerText = "Login"
 
     loginForm.append(usernameDiv, submitButton)
-    loginFormCon.append(loginForm)
+    loginFormCon.append(textDiv, loginForm)
     loginForm.addEventListener("submit", userLogin)
 
     let registerForm = document.createElement("form")
@@ -279,6 +297,8 @@ function displayLoginForm(){
     let usernameDiv2 = document.createElement('div')
 
     let usernameLabel2 = document.createElement("label")
+    usernameLabel2.htmlFor = "username2"
+    usernameLabel2.innerText = "Username"
     let usernameInput2 = document.createElement("input")
     usernameInput2.type = "text"
 
@@ -312,16 +332,19 @@ function userLogin(evt){
             alert("User logged in.")
             loginFormCon.innerHTML = ""
             
-            let userUsernameP = document.createElement("p")
-            userUsernameP.innerText = `Logged in as ${foundUser.username}`
+            let textDiv = document.createElement('div')
+            textDiv.innerText = `Hi, ${foundUser.username}!`
+            textDiv.className = "login-text"
 
             let logOutButton = document.createElement("button")
             logOutButton.innerText = "Logout"
 
-            loginFormCon.append(userUsernameP, logOutButton)
+            textDiv.append(logOutButton)
+
+            loginFormCon.append(textDiv)
 
             logOutButton.addEventListener('click', (e) => {
-                
+                userObj = {}
                 cardCollectionDiv.innerHTML = ""
                 displayLoginForm()
                 displayGameArr.forEach(gameObj => {
@@ -377,8 +400,10 @@ function userRegister(evt){
         .then(resp => resp.json())
         .then(newFavoriteList => {
             evt.target.reset()
+            favGamesListArr.push(newFavoriteList)
         })
     })
 }
 
 displayLoginForm()
+favArrFetch()
