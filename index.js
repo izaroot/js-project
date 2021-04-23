@@ -347,8 +347,13 @@ function userLogin(evt){
                 userObj = {}
                 cardCollectionDiv.innerHTML = ""
                 displayLoginForm()
-                displayGameArr.forEach(gameObj => {
-                cardRenderer(gameObj)
+                fetch('http://localhost:3000/games')
+                .then(resp => resp.json())
+                .then((gamesArr) => {
+                    displayGameArr = gamesArr
+                    gamesArr.forEach(gameObj => {
+                        cardRenderer(gameObj)       
+                    } )
                 })
 
             })
